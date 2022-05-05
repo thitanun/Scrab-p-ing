@@ -36,12 +36,10 @@ class Ui_pro_front(object):
         self.wb_bttn.setText(_translate("pro_front", "WEB"))
         self.tw_bttn.setText(_translate("pro_front", "TWITTER"))
 
-    def con_twitter(self):
+    def con_twitter(self): #show scrap twitter window
         self.TwitterPage.show()
-        # sys.withdraw()
-        # open_tw.exec()
 
-    def con_web(self):
+    def con_web(self): #show scrap website window
         self.WebsitePage.show()
 
 

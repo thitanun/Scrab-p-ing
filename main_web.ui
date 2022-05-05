@@ -47,8 +47,8 @@
   <widget class="QPushButton" name="search_bttn_ht">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>170</y>
+     <x>80</x>
+     <y>130</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -61,9 +61,9 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>260</y>
+     <y>290</y>
      <width>191</width>
-     <height>261</height>
+     <height>231</height>
     </rect>
    </property>
   </widget>
@@ -71,7 +71,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>220</y>
+     <y>260</y>
      <width>191</width>
      <height>31</height>
     </rect>
@@ -86,125 +86,6 @@
    </property>
    <property name="text">
     <string>DATABASE</string>
-   </property>
-  </widget>
-  <widget class="QDateEdit" name="start_date">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>130</y>
-     <width>81</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="locale">
-    <locale language="English" country="UnitedStates"/>
-   </property>
-   <property name="dateTime">
-    <datetime>
-     <hour>0</hour>
-     <minute>0</minute>
-     <second>0</second>
-     <year>2020</year>
-     <month>12</month>
-     <day>30</day>
-    </datetime>
-   </property>
-   <property name="minimumDateTime">
-    <datetime>
-     <hour>0</hour>
-     <minute>0</minute>
-     <second>0</second>
-     <year>2020</year>
-     <month>9</month>
-     <day>30</day>
-    </datetime>
-   </property>
-   <property name="maximumTime">
-    <time>
-     <hour>23</hour>
-     <minute>59</minute>
-     <second>59</second>
-    </time>
-   </property>
-   <property name="displayFormat">
-    <string>dd/MM/yyyy</string>
-   </property>
-   <property name="calendarPopup">
-    <bool>true</bool>
-   </property>
-   <property name="date">
-    <date>
-     <year>2020</year>
-     <month>12</month>
-     <day>30</day>
-    </date>
-   </property>
-  </widget>
-  <widget class="QDateEdit" name="stop_date">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>130</y>
-     <width>81</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="locale">
-    <locale language="English" country="UnitedStates"/>
-   </property>
-   <property name="dateTime">
-    <datetime>
-     <hour>0</hour>
-     <minute>0</minute>
-     <second>0</second>
-     <year>2020</year>
-     <month>12</month>
-     <day>30</day>
-    </datetime>
-   </property>
-   <property name="minimumDateTime">
-    <datetime>
-     <hour>0</hour>
-     <minute>0</minute>
-     <second>0</second>
-     <year>2020</year>
-     <month>9</month>
-     <day>30</day>
-    </datetime>
-   </property>
-   <property name="maximumTime">
-    <time>
-     <hour>23</hour>
-     <minute>59</minute>
-     <second>59</second>
-    </time>
-   </property>
-   <property name="displayFormat">
-    <string>dd/MM/yyyy</string>
-   </property>
-   <property name="calendarPopup">
-    <bool>true</bool>
-   </property>
-   <property name="date">
-    <date>
-     <year>2020</year>
-     <month>12</month>
-     <day>30</day>
-    </date>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>120</y>
-     <width>47</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>to</string>
    </property>
   </widget>
   <widget class="QProgressBar" name="progress_bar">
@@ -254,14 +135,106 @@
     <string/>
    </property>
   </widget>
-  <widget class="QTableWidget" name="data_box">
+  <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
      <x>250</x>
      <y>10</y>
      <width>611</width>
-     <height>561</height>
+     <height>551</height>
     </rect>
+   </property>
+   <property name="currentIndex">
+    <number>2</number>
+   </property>
+   <widget class="QWidget" name="tab">
+    <attribute name="title">
+     <string>Data Twitter</string>
+    </attribute>
+    <widget class="QTableWidget" name="table_box">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>611</width>
+       <height>531</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_2">
+    <attribute name="title">
+     <string>Sentiment</string>
+    </attribute>
+    <widget class="QTableWidget" name="table_box_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>611</width>
+       <height>531</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_3">
+    <attribute name="title">
+     <string>Reference</string>
+    </attribute>
+    <widget class="QTableWidget" name="table_box_3">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>611</width>
+       <height>531</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QLabel" name="ht_label_3">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>160</y>
+     <width>191</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>12</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>LINK</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="ent_ht_2">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>190</y>
+     <width>191</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="search_bttn_ht_2">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>230</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>UPDATE</string>
    </property>
   </widget>
  </widget>

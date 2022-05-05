@@ -1,11 +1,10 @@
-# from multiprocessing.connection import answer_challenge
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QTableWidgetItem
 import os
 import collectTwitter
 import pandas as pd
 from datetime import datetime,timedelta ,date
-
+import json
 
 class Ui_main_twit(object):
     def setupUi(self, main_twit):
@@ -37,7 +36,6 @@ class Ui_main_twit(object):
         self.keyword_data = QtWidgets.QListWidget(main_twit)
         self.keyword_data.setGeometry(QtCore.QRect(30, 260, 191, 261))
         self.keyword_data.setObjectName("keyword_data")
-        # self.keyword_data.itemDoubleClicked.connect(self.show_data_in_database)
         self.keyword_data.doubleClicked.connect(self.show_data_in_database)
 
 
@@ -56,13 +54,8 @@ class Ui_main_twit(object):
         self.start_date = QtWidgets.QDateEdit(main_twit)
         self.start_date.setGeometry(QtCore.QRect(30, 130, 81, 22))
         self.start_date.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedStates))
-        # self.start_date.setDateTime(QtCore.QDateTime(QtCore.QDate(2022, 4, 16), QtCore.QTime(0, 0, 0)))
-        # self.start_date.setMinimumDateTime(QtCore.QDateTime(QtCore.QDate(2020, 9, 30), QtCore.QTime(0, 0, 0)))
-        # self.start_date.setMaximumTime(QtCore.QTime(23, 59, 59))
         self.start_date.setCalendarPopup(True)
-        # self.start_date.setDate(date.today())
         self.start_date.setDate(QtCore.QDate.currentDate())
-        # self.start_date.setDate(QtCore.QDate(2020, 12, 30))
         self.start_date.setDisplayFormat("dd/MM/yyyy")
         self.start_date.setObjectName("start_date")
 
@@ -70,13 +63,8 @@ class Ui_main_twit(object):
         self.stop_date = QtWidgets.QDateEdit(main_twit)
         self.stop_date.setGeometry(QtCore.QRect(140, 130, 81, 22))
         self.stop_date.setLocale(QtCore.QLocale(QtCore.QLocale.English, QtCore.QLocale.UnitedStates))
-        # self.stop_date.setDateTime(QtCore.QDateTime(QtCore.QDate(2022, 4, 16), QtCore.QTime(0, 0, 0)))
-        # self.stop_date.setMinimumDateTime(QtCore.QDateTime(QtCore.QDate(2020, 9, 30), QtCore.QTime(0, 0, 0)))
-        # self.stop_date.setMaximumTime(QtCore.QTime(23, 59, 59))
         self.stop_date.setCalendarPopup(True)
-        # self.stop_date.setDate(date.today())
         self.stop_date.setDate(QtCore.QDate.currentDate())
-        # self.stop_date.setDate(QtCore.QDate(2020, 12, 30))
         self.stop_date.setDisplayFormat("dd/MM/yyyy")
         self.stop_date.setObjectName("start_date")
 
@@ -93,9 +81,7 @@ class Ui_main_twit(object):
         self.tab.setObjectName("tab")
 
         self.table_box = QtWidgets.QTableWidget(self.tab)
-        # self.table_box = QtWidgets.QTableWidget(main_twit)
         self.table_box = QtWidgets.QTableWidget(self.tab)
-        # self.table_box.setGeometry(QtCore.QRect(250, 20, 611, 531))
         self.table_box.setGeometry(QtCore.QRect(0, 0, 611, 531))
         self.table_box.setObjectName("table_box")
         self.table_box.setColumnCount(0)
@@ -113,6 +99,17 @@ class Ui_main_twit(object):
         self.count_box.setRowCount(0)
 
         self.tabWidget.addTab(self.tab_2, "")
+
+        self.tab_3 = QtWidgets.QWidget()
+        self.tab_3.setObjectName("tab_3")
+
+        self.table_box_3 = QtWidgets.QTableWidget(self.tab_3)
+        self.table_box_3.setGeometry(QtCore.QRect(0, 0, 611, 531))
+        self.table_box_3.setObjectName("table_box_3")
+        self.table_box_3.setColumnCount(0)
+        self.table_box_3.setRowCount(0)
+
+        self.tabWidget.addTab(self.tab_3, "")
 
         self.progress_bar = QtWidgets.QProgressBar(main_twit)
         self.progress_bar.setGeometry(QtCore.QRect(30, 540, 191, 23))
@@ -135,12 +132,11 @@ class Ui_main_twit(object):
         font = QtGui.QFont()
         font.setPointSize(10)
 
-        # self.current_date_lb.setText("")
+
         self.current_date_lb.setFont(font)
         self.current_date_lb.setObjectName("current_date_lb")
 
         self.retranslateUi(main_twit)
-        # self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(main_twit)
 
         self.check_date()
@@ -163,58 +159,61 @@ class Ui_main_twit(object):
         self.label.setText(_translate("main_twit", "to"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("main_twit", "Data Twitter"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("main_twit", "Data Count"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("main_twit", "Sentiment"))
         self.today_lb.setText(_translate("main_twit", "TODAY"))
-        # self.current_date_lb.setText(_translate("main_twit", f"{self.today_str}"))
         self.current_date_lb.setText(_translate("main_twit","TODAY"))
 
 
 
-    def no_text_in_ent_ht(self):
-        # warn_ent = QMessageBox.warning(self, "Box is empty", 
-        #                                              "Please enter text before you search",
-        #                                              defaultButton = QMessageBox.Ok)
+    def no_text_in_ent_ht(self): # Warning if entry have no text
         warn_ent = QtWidgets.QMessageBox()
         warn_ent.setIcon(QtWidgets.QMessageBox.Warning)
         warn_ent.setWindowTitle("Box is empty!")
         warn_ent.setText("Please enter text before you search")
-        warn_ent.setStandardButtons(QtWidgets.QMessageBox.Ok ) #| QtWidgets.QMessageBox.Cancel)
+        warn_ent.setStandardButtons(QtWidgets.QMessageBox.Ok )
         warn_ent.buttonClicked.connect(lambda:warn_ent.close())
 
         a = warn_ent.exec_() 
+    
+    def no_data_in_dataframe(self): # Warning if dataframe is empty
+        warn_data_ent = QtWidgets.QMessageBox()
+        warn_data_ent.setIcon(QtWidgets.QMessageBox.Warning)
+        warn_data_ent.setWindowTitle("Empty")
+        warn_data_ent.setText("Data is empty!")
+        warn_data_ent.setStandardButtons(QtWidgets.QMessageBox.Ok )
+        warn_data_ent.buttonClicked.connect(lambda:warn_data_ent.close())
+
+        w = warn_data_ent.exec_() 
 
 
-    def check_date(self):
-        today = datetime.utcnow().date()
+    def check_date(self): #check date 
+        today = datetime.utcnow().date() 
         today_str = today.strftime("%d-%m-%Y")
         self.current_date_lb.setText(today_str)
 
 
-    def check_keyword(self):
+    def check_keyword(self): #check keysword
         self.al_search = os.listdir("./data/tweets")
-        print('test update', self.al_search)
 
 
-    def update_keyword(self):
+    def update_keyword(self): #update_keyword
         self.keyword_data.clear()
         for i in self.al_search:
             self.keyword_data.addItem(i)
-        print('update success')
 
 
-    def conf_to_search(self):
+    def conf_to_search(self): #ask for confirm to search data
         sure_ent = QtWidgets.QMessageBox()
         sure_ent.setIcon(QtWidgets.QMessageBox.Critical)
         sure_ent.setWindowTitle("New Keyword")
         sure_ent.setText("This keyword is not in database\n Do you want to continue?")
-        # sure_ent.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
         sure_ent.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
-        # sure_ent.buttonClicked.connect(lambda:sure_ent.close())
         sure_ent.buttonClicked.connect(self.answer_bttn)
 
         a = sure_ent.exec_() 
 
     
-    def conf_to_search_date(self, date_start, date_stop):
+    def conf_to_search_date(self, date_start, date_stop): #ask for confirm to search date
         sure_date_ent = QtWidgets.QMessageBox()
         sure_date_ent.setIcon(QtWidgets.QMessageBox.Critical)
         sure_date_ent.setWindowTitle("New Date")
@@ -226,18 +225,15 @@ class Ui_main_twit(object):
 
 
 
-    def answer_bttn(self, conf):
+    def answer_bttn(self, conf): #button when program ask to continue
         if conf.text() == "OK":
-            print('said yes')
             self.answer_confirm = True
         else:
-            print('said no')
             self.answer_confirm = False
 
 
     def search_keyword(self):
         keyword = self.ent_ht.text()
-        print('test keyword', keyword)
         date_start = self.start_date.date().toPyDate()
         date_stop = self.stop_date.date().toPyDate()
 
@@ -245,61 +241,39 @@ class Ui_main_twit(object):
             self.no_text_in_ent_ht()
 
         elif keyword not in self.al_search and keyword != "": #if keyword is not in database
-            print("not in")
             self.conf_to_search()
 
-        elif date_start.strftime('%d%m%Y') not in self.colTwitter.metadata['keyword'][keyword]['date']: #if keyword have no data at that date
-            print("date not in")
-            print('start', date_start)
-            print('stop', date_stop)
-            self.conf_to_search_date(date_start, date_stop)
-            # print('test ans', self.answer_confirm)
+        elif date_start.strftime('%d%m%Y') not in self.colTwitter.metadata['keyword'][keyword]['date'] or date_stop.strftime('%d%m%Y') not in self.colTwitter.metadata['keyword'][keyword]['date']: #if keyword have no data at that date
 
-        elif date_stop.strftime('%d%m%Y') not in self.colTwitter.metadata['keyword'][keyword]['date']: #if keyword have no data at that date
-            print("date not in")
             self.conf_to_search_date(date_start, date_stop)
-
-        else:
-            print("okay")
 
         if self.answer_confirm:
-            print('start')
-            # collectTwitter.ClawTwitter.get_datatweet(keyword)
             self.progress_bar.show()
-            # self.progress_bar.setValue(int(0)) 
-            # self.colTwitter.get_datatweet(keyword)
             self.progress_bar.setValue(int(25)) 
             self.check_keyword()
             self.update_keyword()
             self.get_data_twitter()
         elif keyword in self.al_search and keyword != "" and date_start.strftime('%d%m%Y') in self.colTwitter.metadata['keyword'][keyword]['date'] and date_stop.strftime('%d%m%Y') in self.colTwitter.metadata['keyword'][keyword]['date']:
-            print('in database')
             self.progress_bar.show()
-            # self.progress_bar.setValue(int(0))
             self.progress_bar.setValue(int(25)) 
             self.get_data_twitter()
         else:
-            print('no')
+            pass
     
-    def show_data_in_database(self):
+    def show_data_in_database(self): #show selected word when double clicked at database
         self.ent_ht.setText(self.keyword_data.selectedItems()[0].text())
-        # self.get_data_twitter()
 
 
-    def show_data_table(self, data):
-        # print('show data here')
+    def show_data_table(self, data): #show data on table
         head_col = list(data.head(0))
-        # print('check head', head_col)
         len_file_col = len(head_col)
-        # print('len col', len_file_col)
         len_file_row = len(data)
-        # print('len row', len_file_row)
 
         self.table_box.clear()
         self.table_box.setRowCount(0)
         self.table_box.setColumnCount(len_file_col)
         self.table_box.setRowCount(len_file_row)
-        self.progress_bar.setValue(int(70)) 
+        self.progress_bar.setValue(int(65)) 
         for n, key in enumerate(data.keys()): # add item
             for m, item in enumerate(data[key]):
                 if type(item) == float:
@@ -309,79 +283,68 @@ class Ui_main_twit(object):
                     newitem = QTableWidgetItem(str(item))
                 self.table_box.setItem(m, n, newitem)
         self.table_box.setHorizontalHeaderLabels(head_col)
-        self.table_box.verticalHeader().hide()   
-        # self.progress_bar.setValue(int(100))    
+        self.table_box.verticalHeader().hide()     
         self.table_box.show()
-        # self.progress_bar.hide()
 
 
-    def formdate(self,date_start,date_stop):
-        # form_date = "%Y-%m-%d"
-        # format_star = datetime.strptime(date_start,form_date)
-        # format_stop = datetime.strptime(date_stop,form_date)
+
+    def formdate(self,date_start,date_stop):# form date
+
         diff_deltadays = date_stop - date_start 
-        # diff_deltadays = format_stop - format_star #timedelta
         diff_days = diff_deltadays.days #int
         return diff_days
-        # return format_star,format_stop,diff_days
-    
-    # def get_data_twitter(self):
-    #     keyword = self.ent_ht.text().upper()
-    #     date_start = self.start_date.date().toPyDate()
-    #     date_stop = self.stop_date.date().toPyDate()
-    #     # format_star,format_stop,diff_days = self.formdate(date_start,date_stop)
-    #     diff_days = self.formdate(date_start,date_stop)
-    #     dataframe = []
-    #     for i in range(diff_days+1):
-    #         # date_add = format_star + timedelta(days = int(i))
-    #         date_add = date_start + timedelta(days = int(i))
-    #         date_addstr = date_add.strftime("%Y-%m-%d")
-    #         date_filestr = date_add.strftime("%d%m%Y")
-    #         try:
-    #             df = pd.read_excel(f"./data/tweets/{keyword}/{keyword}_{date_filestr}.xlsx", engine="openpyxl")
-    #         except:
-    #             self.colTwitter.get_datatweet(keyword,date_add)
-    #             self.check_keyword()
-    #             self.update_keyword()
-    #             df = pd.read_excel(f"./data/tweets/{keyword}/{keyword}_{date_filestr}.xlsx", engine="openpyxl")
-    #         dataframe.append(df)
-    #     result = pd.concat(dataframe)
-    #     self.show_data_table(result)
-    #     # return result 
+
 
     def get_data_twitter(self):
         keyword = self.ent_ht.text().upper()
         date_start = self.start_date.date().toPyDate()
         date_stop = self.stop_date.date().toPyDate()
-        # format_star,format_stop,diff_days = self.formdate(date_start,date_stop)
         diff_days = self.formdate(date_start,date_stop)
         dataframe = []
+
         for i in range(diff_days+1):
-            # date_add = format_star + timedelta(days = int(i))
             date_add = date_start + timedelta(days = int(i))
             date_addstr = date_add.strftime("%Y-%m-%d")
             date_filestr = date_add.strftime("%d%m%Y")
-            try:
+            try: #read file in folder
                 df = pd.read_excel(f"./data/tweets/{keyword}/{keyword}_{date_filestr}.xlsx", engine="openpyxl")
-            except:
-                self.progress_bar.setValue(int(25)) 
-                self.colTwitter.get_datatweet(keyword,date_add)
-                self.progress_bar.setValue(int(50)) 
-                self.check_keyword()
-                self.update_keyword()
-                df = pd.read_excel(f"./data/tweets/{keyword}/{keyword}_{date_filestr}.xlsx", engine="openpyxl")
-            self.progress_bar.setValue(int(50)) 
-            dataframe.append(df)
-        result = pd.concat(dataframe)
-        self.show_data_table(result)
-        count_frame = self.colTwitter.showcount_twitter(result)
-        # print(count_frame)
-        self.show_count_table(count_frame)
-        # return result 
+                dataframe.append(df)
 
+            except:
+                self.progress_bar.setValue(int(25))
+                try:
+                    self.colTwitter.get_datatweet(keyword,date_add) #add file in folder
+                    self.check_keyword()
+                    self.update_keyword()
+                    df = pd.read_excel(f"./data/tweets/{keyword}/{keyword}_{date_filestr}.xlsx", engine="openpyxl")#read file in folder
+                    dataframe.append(df)
+                except:
+                    data_tweet = [] # data frame empty
+                    df = pd.DataFrame(data=data_tweet,columns=['topic', 'count topic', 'user','location','post date',
+                                'tweet','retweet','likes', 'sentiment','tweet link'])
+                    dataframe.append(df)
+                    self.save_metadata(keyword)
+        self.progress_bar.setValue(int(50))
+        result = pd.concat(dataframe)
+        self.show_data_table(result )#show table 
+        count_frame = self.colTwitter.showcount_twitter(result) # dataframe count
+        self.show_count_table(count_frame) #show dataframe count
+        self.show_sentiment_table(result) #show dataframe sentiment
+        self.check_keyword() #check keyword
+        self.update_keyword()  #update keyword
+
+    def save_metadata(self,keyword): #save metadata when dataframe empty and new keys
+        metadata_json = open('./data/twitterdata.json',encoding="UTF-8")
+        metadata = json.load(metadata_json)
+        with open('./data/twitterdata.json', 'w', encoding="UTF-8") as file:
+            if keyword not in metadata.keys():
+                metadata["keyword"][keyword] = {}
+                metadata["keyword"][keyword]['date'] = []
+                metafile = json.dumps(metadata, indent=4)
+            file.write(metafile)
 
     def show_count_table(self, data):
-        self.progress_bar.setValue(int(90))  
+        self.progress_bar.setValue(int(70))  
         head_col = list(data.head(0))
         len_file_col = len(head_col)
         len_file_row = len(data)
@@ -401,4 +364,60 @@ class Ui_main_twit(object):
         self.count_box.setHorizontalHeaderLabels(head_col)
         self.count_box.verticalHeader().hide()    
         self.count_box.show()
-        self.progress_bar.hide()
+        self.progress_bar.setValue(int(90))  
+
+        
+    def show_sentiment_table(self,data):
+        ne_count,pos_count,neg_count,per_ne,per_pos,per_neg = self.sentiment_cal_count(data)
+        datasentiment_count = self.sentiment_count_frame(ne_count,pos_count,neg_count,per_ne,per_pos,per_neg)
+        head_col = list(datasentiment_count.head(0))
+        len_file_col = len(head_col)
+        len_file_row = len(datasentiment_count)
+        self.table_box_3.clear()
+        self.table_box_3.setRowCount(0)
+        self.table_box_3.setColumnCount(len_file_col)
+        self.table_box_3.setRowCount(len_file_row)
+        for n, key in enumerate(datasentiment_count.keys()): # add item
+            for m, item in enumerate(datasentiment_count[key]):
+                if type(item) == float:
+                    float_item = round(item,3)
+                    newitem = QTableWidgetItem(str(float_item))
+                else:
+                    newitem = QTableWidgetItem(str(item))
+                self.table_box_3.setItem(m, n, newitem)
+        self.table_box_3.setHorizontalHeaderLabels(head_col)
+        self.table_box_3.verticalHeader().hide()    
+        self.table_box_3.show()
+        self.progress_bar.setValue(int(100))  
+
+
+    def sentiment_cal_count(self,data): #calculate sentiment
+
+        sentiment_data = list(data['sentiment'])
+        neutral_count = 0
+        positive_count = 0
+        negative_count = 0
+
+        try:
+            for sen in sentiment_data:# check polarity
+                if sen == 'neutral':
+                    neutral_count += 1
+                elif sen == 'positive':
+                    positive_count += 1
+                elif sen == 'negative':
+                    negative_count += 1
+            all_percent = neutral_count+positive_count+negative_count
+            percent_neutral = neutral_count/all_percent * 100     # percent polarity
+            percent_positive = positive_count/all_percent * 100
+            percent_negative = negative_count/all_percent * 100
+        except:
+            percent_neutral = 0
+            percent_positive = 0
+            percent_negative = 0
+        return neutral_count,positive_count,negative_count,percent_neutral,percent_positive,percent_negative
+
+    def sentiment_count_frame(self,ne_count,pos_count,neg_count,per_ne,per_pos,per_neg): #dataframe
+        list_dataframe = [['neutral',ne_count,per_ne],['positive',pos_count,per_pos],['negative',neg_count,per_neg]]
+        data_frame = pd.DataFrame(data=list_dataframe,columns=['sentiment','total','percent'])
+
+        return data_frame
